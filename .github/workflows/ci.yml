@@ -1,0 +1,22 @@
+# Tests run on CPU with tiny random models: no downloads, no keys.
+name: ci
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 1"   # weekly: catch breakage from new torch/transformers/peft releases
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+      - run: uv python install
+      - run: uv sync --locked
+      - run: uv run pytest -q
+        env:
+          HF_HUB_OFFLINE: "1"
+      - run: uv run lora-mergecheck demo --lang en
+        env:
+          HF_HUB_OFFLINE: "1"
