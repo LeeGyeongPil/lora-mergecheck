@@ -1,0 +1,47 @@
+[project]
+name = "lora-mergecheck"
+version = "0.1.0"
+description = "Verify that a merged LoRA checkpoint matches the adapter model: per-module weight residuals, dtype rounding limits, and output drift relative to the adapter effect."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [{ name = "LeeGyeongPil" }]
+keywords = ["lora", "peft", "merge", "checkpoint", "verification", "safetensors", "qlora"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "torch>=2.15.0",
+  "transformers>=5.23.0",
+  "peft>=0.21.3",
+  "safetensors>=0.8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/LeeGyeongPil/lora-mergecheck"
+Issues = "https://github.com/LeeGyeongPil/lora-mergecheck/issues"
+Changelog = "https://github.com/LeeGyeongPil/lora-mergecheck/blob/main/CHANGELOG.md"
+
+[project.scripts]
+lora-mergecheck = "lora_mergecheck.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lora_mergecheck"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
