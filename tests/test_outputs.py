@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 import torch
-from conftest import write_state
+from conftest import copy_dir, write_state
 
 from lora_mergecheck import InputError, check_merge, demo
 from lora_mergecheck.outputs import compare_logits, judge
@@ -73,6 +73,15 @@ def test_prompts_file_needs_a_tokenizer(cases, work):
     prompts.write_text("hello world\n")
     with pytest.raises(InputError) as info:
         outputs_only(cases / "base", cases / "adapter", cases / "merged_fp32_normal", prompts=prompts)
+    assert info.value.code == "no_tokenizer"
+    assert info.value.params["path"] == str(cases / "base")
+
+
+def test_unreadable_prompts_file_stays_bad_prompts(cases, work):
+    base = copy_dir(cases / "base", work / "base")
+    (base / "tokenizer.json").write_text("{}")  # a tokenizer file exists, the prompts file does not
+    with pytest.raises(InputError) as info:
+        outputs_only(base, cases / "adapter", cases / "merged_fp32_normal", prompts=work / "missing.txt")
     assert info.value.code == "bad_prompts"
 
 

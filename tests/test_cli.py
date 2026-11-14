@@ -102,6 +102,17 @@ def test_output_layer_needs_folders_with_config(cases, work, capsys):
     assert code == 2 and "single file" in err
 
 
+@pytest.mark.parametrize("lang, phrase", [("en", "no tokenizer files"), ("ko", "토크나이저 파일이 없습니다")])
+def test_prompts_without_tokenizer_in_base_is_exit_2(cases, work, capsys, lang, phrase):
+    prompts = work / "p.txt"
+    prompts.write_text("hello world\n")
+    argv = ["--lang", lang, "check", str(cases / "base"), str(cases / "adapter"),
+            str(cases / "merged_fp32_normal"), "--layers", "outputs", "--prompts", str(prompts)]
+    code, _, err = run(argv, capsys)
+    assert code == 2 and phrase in err
+    assert "sentencepiece" not in err and "tiktoken" not in err
+
+
 def test_bad_option_value_exit_2(cases, capsys):
     code, _, err = run(check_args(cases, "merged_fp32_normal", "adapter", "--warn-lost-ratio", "5"), capsys)
     assert code == 2 and "warn_lost_ratio" in err
