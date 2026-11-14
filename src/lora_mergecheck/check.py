@@ -16,7 +16,7 @@ from .weights import check_weights
 
 LAYERS = ("all", "weights", "outputs")
 #: weight-layer causes after which the model cannot be loaded meaningfully
-_BLOCKING = {"leftover_lora_keys", "missing_tensor", "shape_mismatch", "vocab_resized_without_saved_embeddings"}
+_BLOCKING = {"leftover_adapter_config", "leftover_lora_keys", "missing_tensor", "shape_mismatch", "vocab_resized_without_saved_embeddings"}
 
 
 def _version(package: str) -> str | None:
@@ -102,6 +102,9 @@ def check_merge(
                 raise InputError("no_config", path=str(ckpt.path))
 
     causes: list[Cause] = []
+    # A leftover adapter_config.json makes transformers treat the folder as an adapter and fail to load it.
+    if not merged_ckpt.is_file and (merged_ckpt.root / "adapter_config.json").is_file():
+        causes.append(Cause("leftover_adapter_config", ["adapter_config.json"], {"file": "adapter_config.json"}))
     weights: dict = {"status": "skipped", "skipped_reason": "layers"}
     if layers in ("all", "weights"):
         weights, w_causes = check_weights(base_ckpt, lora, merged_ckpt, warn_lost_ratio=warn_lost_ratio)

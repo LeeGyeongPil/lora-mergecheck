@@ -139,6 +139,7 @@ EN: dict[str, str] = {
     # ---- cause meanings -------------------------------------------------
     "cause.update_not_applied": "The LoRA update was not added to these modules (the merged weight equals the base).",
     "cause.update_mismatch": "The merged weight differs from base + s*B*A by more than dtype rounding allows.",
+    "cause.leftover_adapter_config": "The merged folder still contains adapter_config.json, so transformers reads it as an adapter and fails to load it.",
     "cause.leftover_lora_keys": "The merged file still contains lora_/base_layer keys: it is not a merged checkpoint.",
     "cause.non_lora_changed": "Layers without a LoRA adapter changed compared with the base model.",
     "cause.modules_to_save_not_merged": "Layers the adapter saved in full (modules_to_save) do not hold the adapter values.",
@@ -154,6 +155,7 @@ EN: dict[str, str] = {
     # ---- recommendations ------------------------------------------------
     "rec.update_not_applied": "Re-run merge_and_unload() on all target modules and save the returned model.",
     "rec.update_mismatch": "Confirm base, adapter and merged belong together (same base, same lora_alpha/r).",
+    "rec.leftover_adapter_config": "Delete adapter_config.json from the merged folder or move it elsewhere.",
     "rec.leftover_lora_keys": "Save the model RETURNED by merge_and_unload(), not the PEFT wrapper.",
     "rec.non_lora_changed": "Check that the merged model started from the same base weights.",
     "rec.modules_to_save_not_merged": "Merge with the adapter's modules_to_save layers included, then save.",
@@ -285,6 +287,7 @@ KO: dict[str, str] = {
     "verdict.INCONCLUSIVE": "판단 불가(INCONCLUSIVE)",
     "cause.update_not_applied": "이 모듈들에 LoRA 갱신이 더해지지 않았습니다(합친 가중치가 기본과 같음).",
     "cause.update_mismatch": "합친 가중치가 기본 + s*B*A 와 dtype 반올림 범위를 넘어 다릅니다.",
+    "cause.leftover_adapter_config": "합친 폴더에 adapter_config.json 이 남아 transformers 가 어댑터로 읽으려다 실패합니다.",
     "cause.leftover_lora_keys": "합친 파일에 lora_/base_layer 키가 남아 있습니다: 합친 체크포인트가 아닙니다.",
     "cause.non_lora_changed": "LoRA 가 없는 층이 기본 모델과 달라졌습니다.",
     "cause.modules_to_save_not_merged": "어댑터가 통째로 저장한 층(modules_to_save)에 어댑터 값이 들어 있지 않습니다.",
@@ -299,6 +302,7 @@ KO: dict[str, str] = {
     "cause.outputs_unavailable": "출력 층을 실행하지 못했습니다.",
     "rec.update_not_applied": "모든 대상 모듈에 merge_and_unload() 를 다시 돌리고 반환된 모델을 저장하세요.",
     "rec.update_mismatch": "기본·어댑터·합친 것이 서로 맞는지(같은 기본, 같은 lora_alpha/r) 확인하세요.",
+    "rec.leftover_adapter_config": "합친 폴더에서 adapter_config.json 을 지우거나 다른 곳으로 옮기세요.",
     "rec.leftover_lora_keys": "PEFT 래퍼가 아니라 merge_and_unload() 가 반환한 모델을 저장하세요.",
     "rec.non_lora_changed": "합친 모델이 같은 기본 가중치에서 시작했는지 확인하세요.",
     "rec.modules_to_save_not_merged": "어댑터의 modules_to_save 층까지 포함해 합친 뒤 저장하세요.",

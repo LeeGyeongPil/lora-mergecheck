@@ -13,6 +13,7 @@ SEVERITY: dict[str, str] = {
     "update_not_applied": "FAIL",
     "update_mismatch": "FAIL",
     "leftover_lora_keys": "FAIL",
+    "leftover_adapter_config": "FAIL",
     "non_lora_changed": "FAIL",
     "modules_to_save_not_merged": "FAIL",
     "vocab_resized_without_saved_embeddings": "FAIL",
