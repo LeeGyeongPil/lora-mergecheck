@@ -40,7 +40,7 @@ uv run lora-mergecheck --version
 From a clone, put `uv run` in front of every `lora-mergecheck` command in this README (for example `uv run lora-mergecheck demo`).
 
 ```text
-lora-mergecheck 0.1.0
+lora-mergecheck 0.1.1
 ```
 
 The first install downloads PyTorch, which is large (several hundred MB to a few GB depending on the platform). No extra system packages are needed on a minimal Linux image beyond `curl` and `git`.
@@ -198,6 +198,7 @@ lora-mergecheck check demo-out/base demo-out/adapter demo-out/merged_leftover_lo
 |---|---|---|---|
 | `update_not_applied` | FAIL | Merged weight equals the base for these modules. | Re-run `merge_and_unload()` on all target modules and save the returned model. |
 | `update_mismatch` | FAIL | Differs from `base + s·B·A` by more than rounding allows. | Confirm base, adapter and merged belong together (same base, same `lora_alpha`/`r`). |
+| `leftover_adapter_config` | FAIL | Merged folder still contains `adapter_config.json`, so transformers loads it as an adapter and fails. | Delete `adapter_config.json` from the merged folder or move it elsewhere. |
 | `leftover_lora_keys` | FAIL | File still contains `lora_`/`base_layer` keys. | Save the model returned by `merge_and_unload()`, not the PEFT wrapper. |
 | `non_lora_changed` | FAIL | Layers without an adapter changed. | Check the merge started from the same base weights. |
 | `modules_to_save_not_merged` | FAIL | Fully saved layers (e.g. `lm_head`) lack the adapter values. | Merge with the adapter's `modules_to_save` included, then save. |
@@ -300,7 +301,7 @@ uv sync
 uv run pytest -q
 ```
 
-65 tests, CPU only and offline. Bugs and ideas are welcome as issues. See [CHANGELOG.md](CHANGELOG.md).
+69 tests, CPU only and offline. Bugs and ideas are welcome as issues. See [CHANGELOG.md](CHANGELOG.md).
 
 ## Sources
 

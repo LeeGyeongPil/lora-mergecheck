@@ -40,7 +40,7 @@ uv run lora-mergecheck --version
 clone 으로 쓸 때는 이 문서의 모든 `lora-mergecheck` 명령 앞에 `uv run` 을 붙이세요(예: `uv run lora-mergecheck demo`).
 
 ```text
-lora-mergecheck 0.1.0
+lora-mergecheck 0.1.1
 ```
 
 처음 설치할 때 PyTorch 를 받으므로 용량이 큽니다(플랫폼에 따라 수백 MB~수 GB). 최소 리눅스 이미지에서는 `curl` 과 `git` 외에 추가 시스템 패키지가 필요 없습니다.
@@ -198,6 +198,7 @@ lora-mergecheck check demo-out/base demo-out/adapter demo-out/merged_leftover_lo
 |---|---|---|---|
 | `update_not_applied` | FAIL | 이 모듈들의 합친 가중치가 기본과 같음. | 모든 대상 모듈에 `merge_and_unload()` 를 다시 돌리고 반환된 모델을 저장. |
 | `update_mismatch` | FAIL | `base + s·B·A` 와 반올림 범위를 넘어 다름. | 기본·어댑터·합친 것이 서로 맞는지(같은 기본, 같은 `lora_alpha`/`r`) 확인. |
+| `leftover_adapter_config` | FAIL | 합친 폴더에 `adapter_config.json` 이 남아 transformers 가 어댑터로 읽다가 실패함. | 합친 폴더에서 `adapter_config.json` 을 지우거나 다른 곳으로 옮김. |
 | `leftover_lora_keys` | FAIL | 파일에 `lora_`/`base_layer` 키가 남음. | PEFT 래퍼가 아니라 `merge_and_unload()` 가 반환한 모델을 저장. |
 | `non_lora_changed` | FAIL | 어댑터가 없는 층이 달라짐. | 같은 기본 가중치에서 합쳤는지 확인. |
 | `modules_to_save_not_merged` | FAIL | 통째로 저장한 층(예: `lm_head`)에 어댑터 값이 없음. | 어댑터의 `modules_to_save` 까지 포함해 합친 뒤 저장. |
@@ -299,7 +300,7 @@ uv sync
 uv run pytest -q
 ```
 
-테스트 65개, CPU 전용·오프라인. 버그·제안은 이슈로 남겨 주세요. 변경 기록은 [CHANGELOG.md](CHANGELOG.md).
+테스트 69개, CPU 전용·오프라인. 버그·제안은 이슈로 남겨 주세요. 변경 기록은 [CHANGELOG.md](CHANGELOG.md).
 
 ## 출처
 
