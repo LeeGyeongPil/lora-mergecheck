@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 
@@ -10,6 +11,7 @@ import pytest
 import torch
 from conftest import copy_dir, edit_json, read_state, write_state
 
+from lora_mergecheck.cli import main
 from lora_mergecheck import InputError, UnsupportedAdapterError, check_merge
 
 
@@ -152,3 +154,43 @@ def test_weights_layer_does_not_import_transformers(cases):
     assert proc.returncode == 0, proc.stderr
     last = json.loads(proc.stdout.strip().splitlines()[-1])
     assert last == {"rc": 0, "transformers": False, "peft": False}
+
+
+def _folder_with_adapter_config(cases, work):
+    merged = copy_dir(cases / "merged_fp32_normal", work / "m2")
+    shutil.copy(cases / "adapter" / "adapter_config.json", merged / "adapter_config.json")
+    return merged
+
+
+def test_leftover_adapter_config_weights(cases, work):
+    merged = _folder_with_adapter_config(cases, work)
+    report = weights_only(cases / "base", cases / "adapter", merged)
+    cause = report.cause("leftover_adapter_config")
+    assert report.verdict == "FAIL"
+    assert cause is not None and cause.modules == ["adapter_config.json"]
+    assert str(work) not in json.dumps(cause.details)
+
+
+def test_leftover_adapter_config_all_layers(cases, work):
+    merged = _folder_with_adapter_config(cases, work)
+    report = check_merge(cases / "base", cases / "adapter", merged)
+    assert report.verdict == "FAIL"
+    assert report.cause("leftover_adapter_config") is not None
+    assert report.cause("outputs_unavailable") is None
+    assert report.outputs["skipped_reason"] == "structure"
+
+
+def test_leftover_adapter_config_cli_exit_1_without_strict(cases, work, capsys):
+    merged = _folder_with_adapter_config(cases, work)
+    code = main(["--lang", "en", "check", str(cases / "base"), str(cases / "adapter"), str(merged),
+                 "--layers", "weights"])
+    out = capsys.readouterr().out
+    assert code == 1
+    cause_text = out[out.index("Causes:"):]
+    assert "leftover_adapter_config" in cause_text and str(work) not in cause_text
+
+
+def test_no_adapter_config_still_passes(cases, work):
+    merged = copy_dir(cases / "merged_fp32_normal", work / "m3")
+    assert not (merged / "adapter_config.json").exists()
+    assert weights_only(cases / "base", cases / "adapter", merged).verdict == "PASS"
