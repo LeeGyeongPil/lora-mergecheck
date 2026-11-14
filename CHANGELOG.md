@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-11-14
+
+### Fixed
+- `--prompts` with a base folder that has no tokenizer files (for example one made by `demo`) now
+  fails with `no_tokenizer` (exit 2) telling you to copy the tokenizer into the base folder. Before,
+  the message wrongly asked you to install `sentencepiece` or `tiktoken`.
+
 ## [0.1.1] - 2026-11-14
 
 ### Fixed
