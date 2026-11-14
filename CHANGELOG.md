@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-14
+
+### Fixed
+- A merged folder that still contains `adapter_config.json` now fails with the new cause
+  `leftover_adapter_config` (all layer modes, exit 1 without `--strict`). Before, `--layers weights`
+  passed and the default run only warned, although transformers cannot load such a folder.
+
 ## [0.1.0] - 2026-11-14
 
 ### Added

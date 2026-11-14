@@ -1,6 +1,6 @@
 [project]
 name = "lora-mergecheck"
-version = "0.1.0"
+version = "0.1.1"
 description = "Verify that a merged LoRA checkpoint matches the adapter model: per-module weight residuals, dtype rounding limits, and output drift relative to the adapter effect."
 readme = "README.md"
 license = { text = "MIT" }
