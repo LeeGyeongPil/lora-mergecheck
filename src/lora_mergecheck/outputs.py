@@ -30,6 +30,11 @@ EFFECT_OVER_FLOOR = 10.0
 _TINY = 1e-12
 _PREFIX_TOKENS = 8
 _SEED = 0
+#: any one of these files in the base folder means a tokenizer can be loaded
+TOKENIZER_FILES = (
+    "tokenizer.json", "tokenizer_config.json", "tokenizer.model",
+    "vocab.json", "merges.txt", "spiece.model",
+)
 
 Progress = Callable[[str], None]
 
@@ -92,6 +97,10 @@ def _load_prompts(
         gen = torch.Generator().manual_seed(_SEED)
         ids = torch.randint(0, vocab, (num_prompts, prompt_len), generator=gen)
         return [row for row in ids]
+    # Check for tokenizer files first, so a missing tokenizer is reported as such
+    # instead of as a misleading "install sentencepiece" error from transformers.
+    if not any((base / name).is_file() for name in TOKENIZER_FILES):
+        raise InputError("no_tokenizer", path=str(base))
     try:
         from transformers import AutoTokenizer
 
