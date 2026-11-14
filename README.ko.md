@@ -40,7 +40,7 @@ uv run lora-mergecheck --version
 clone 으로 쓸 때는 이 문서의 모든 `lora-mergecheck` 명령 앞에 `uv run` 을 붙이세요(예: `uv run lora-mergecheck demo`).
 
 ```text
-lora-mergecheck 0.1.1
+lora-mergecheck 0.1.2
 ```
 
 처음 설치할 때 PyTorch 를 받으므로 용량이 큽니다(플랫폼에 따라 수백 MB~수 GB). 최소 리눅스 이미지에서는 `curl` 과 `git` 외에 추가 시스템 패키지가 필요 없습니다.
@@ -288,6 +288,7 @@ flowchart LR
 | `error: path not found: ...` 와 종료 코드 2 | 폴더나 파일이 없음. | 존재하는 폴더나 `.safetensors` 파일을 넘기세요. |
 | 어댑터에서 종료 코드 2 | DoRA 어댑터는 지원하지 않음. | 그 어댑터는 다른 방법으로 확인하세요. |
 | `INCONCLUSIVE adapter_effect_too_small` | 무작위 프롬프트가 어댑터를 거의 느끼지 못함. | 실제 문장으로 `--prompts FILE` 을 쓰세요. 기본 폴더에 토크나이저가 필요합니다. |
+| `오류: ... 에 토크나이저 파일이 없습니다` 와 종료 코드 2 | `--prompts` 를 줬는데 기본 폴더에 토크나이저 파일이 없음(`demo` 의 기본 폴더에도 없음). | 원본 모델의 토크나이저 파일을 기본 폴더에 복사하거나 `--prompts` 를 빼세요. |
 | 출력 층이 느리거나 메모리 부족 | 모델 3개를 한 번에 하나씩 불러옴(한계 절의 메모리 어림값 참고). | `--layers weights` 를 쓰거나 GPU 가 있으면 `--device cuda`. |
 | `error: ... 를 safetensors 로 읽을 수 없습니다: ...` 와 종료 코드 2 | 파일이 잘렸거나 safetensors 가 아님(예: 디스크가 가득 찬 상태에서 저장). | `safe_serialization=True` 로 체크포인트를 다시 저장하세요. |
 | `--json` 거부 | 경로가 입력 폴더 안. | 보고서를 다른 곳에 저장하세요. |
@@ -300,7 +301,7 @@ uv sync
 uv run pytest -q
 ```
 
-테스트 69개, CPU 전용·오프라인. 버그·제안은 이슈로 남겨 주세요. 변경 기록은 [CHANGELOG.md](CHANGELOG.md).
+테스트 72개, CPU 전용·오프라인. 버그·제안은 이슈로 남겨 주세요. 변경 기록은 [CHANGELOG.md](CHANGELOG.md).
 
 ## 출처
 

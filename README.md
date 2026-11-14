@@ -40,7 +40,7 @@ uv run lora-mergecheck --version
 From a clone, put `uv run` in front of every `lora-mergecheck` command in this README (for example `uv run lora-mergecheck demo`).
 
 ```text
-lora-mergecheck 0.1.1
+lora-mergecheck 0.1.2
 ```
 
 The first install downloads PyTorch, which is large (several hundred MB to a few GB depending on the platform). No extra system packages are needed on a minimal Linux image beyond `curl` and `git`.
@@ -289,6 +289,7 @@ flowchart LR
 | `error: path not found: ...` and exit 2 | A folder or file does not exist. | Pass existing folders or `.safetensors` files. |
 | Exit 2 for an adapter | DoRA adapters are not supported. | Verify that adapter another way. |
 | `INCONCLUSIVE adapter_effect_too_small` | Random prompts barely feel the adapter. | Use `--prompts FILE` with real text; the base folder needs a tokenizer. |
+| `error: no tokenizer files in ...` and exit 2 | `--prompts` was given but the base folder has no tokenizer files (the `demo` base folder has none). | Copy the tokenizer files from the original model into the base folder, or drop `--prompts`. |
 | Output layer is slow or out of memory | It loads three models, one at a time (see the memory rule of thumb under Limits). | Use `--layers weights`, or `--device cuda` if you have a GPU. |
 | `error: cannot read ... as safetensors: ...` and exit 2 | The file is truncated or not safetensors (for example a disk-full save). | Save the checkpoint again with `safe_serialization=True`. |
 | `--json` refused | The path is inside an input folder. | Write the report elsewhere. |
@@ -301,7 +302,7 @@ uv sync
 uv run pytest -q
 ```
 
-69 tests, CPU only and offline. Bugs and ideas are welcome as issues. See [CHANGELOG.md](CHANGELOG.md).
+72 tests, CPU only and offline. Bugs and ideas are welcome as issues. See [CHANGELOG.md](CHANGELOG.md).
 
 ## Sources
 
